@@ -20,6 +20,8 @@ const Leaf = ({attributes, children, leaf}) => {
                 leaf.italic && "italic",
                 leaf.h1 && "font-bold text-3xl",
                 leaf.h2 && "font-bold text-2xl",
+                leaf.h3 && "font-bold text-xl",
+                leaf.h4 && "font-bold text-lg",
             )}
         >
       {children}
