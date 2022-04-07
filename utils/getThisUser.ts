@@ -1,5 +1,5 @@
 import {getSession} from "next-auth/react";
-import {UserModel} from "../models/user";
+import {UserModel} from "../models/models";
 import {GetServerSidePropsContext} from "next";
 import dbConnect from "./dbConnect";
 

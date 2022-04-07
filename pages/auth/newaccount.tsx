@@ -2,7 +2,7 @@ import {GetServerSideProps} from "next";
 import {getSession} from "next-auth/react";
 import getThisUser from "../../utils/getThisUser";
 import {ssrRedirect} from "next-response-helpers";
-import {UserModel} from "../../models/user";
+import {UserModel} from "../../models/models";
 import short from "short-uuid";
 
 export default function NewAccount({}: {}) {

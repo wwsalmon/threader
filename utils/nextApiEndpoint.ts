@@ -2,7 +2,7 @@ import {DatedObj, UserObj} from "./types";
 import {NextApiHandler, NextApiRequest, NextApiResponse} from "next";
 import {getSession} from "next-auth/react";
 import dbConnect from "./dbConnect";
-import {UserModel} from "../models/user";
+import {UserModel} from "../models/models";
 import {res403, res405, res500} from "next-response-helpers";
 import {Session} from "next-auth";
 import {Document} from "mongoose";
