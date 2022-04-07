@@ -1,6 +1,6 @@
 import {useCallback, useMemo, useState} from "react";
 import {withHistory} from "slate-history";
-import {Editable, ReactEditor, Slate, withReact} from "slate-react";
+import {Editable, ReactEditor, Slate, useFocused, useSelected, useSlate, withReact} from "slate-react";
 import {createEditor, Descendant, Text} from "slate";
 import Prism from "prismjs";
 import "../utils/prismMarkdown";
@@ -12,6 +12,24 @@ export const slateInitValue: Descendant[] = [{
 }];
 
 const Leaf = ({attributes, children, leaf}) => {
+    const focused = useFocused();
+    const selected = useSelected();
+    const showSource = focused && selected;
+
+    if (leaf.url) {
+        const {text} = leaf;
+        const [t, label, url] = text.match(/\[(.*)\]\((.*)\)/);
+
+        return (
+            <span {...attributes}>
+                <span className={classNames(!showSource && "hidden")}>{children}</span>
+                {!showSource && (
+                    <a href={url} contentEditable={false} className="underline">{label}</a>
+                )}
+            </span>
+        );
+    }
+
     return (
         <span
             {...attributes}
@@ -22,6 +40,9 @@ const Leaf = ({attributes, children, leaf}) => {
                 leaf.h2 && "font-bold text-2xl",
                 leaf.h3 && "font-bold text-xl",
                 leaf.h4 && "font-bold text-lg",
+                leaf.blockquote && "inline-block border-l-4 pl-2 text-gray-500 italic",
+                leaf.code && "font-[monospace] bg-gray-100",
+                leaf.list && "inline-block pl-2 border-l-2",
             )}
         >
       {children}
@@ -52,8 +73,6 @@ export default function Editor({}: {}) {
         };
 
         const tokens = Prism.tokenize(node.text, Prism.languages.markdown);
-
-        console.log(tokens);
 
         let start = 0;
 
