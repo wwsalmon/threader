@@ -1,10 +1,11 @@
 import {Dispatch, ReactNode, SetStateAction} from 'react';
 import ReactModal from "react-modal";
 
-export default function Modal({isOpen, setIsOpen, children}: {
+export default function Modal({isOpen, setIsOpen, children, maxWidth}: {
     isOpen: boolean,
     setIsOpen: Dispatch<SetStateAction<boolean>>,
     children: ReactNode,
+    maxWidth?: string | number,
 }) {
     const modalClasses = "top-24 left-1/2 fixed bg-white p-4 rounded-md shadow-xl mx-4";
 
@@ -13,7 +14,7 @@ export default function Modal({isOpen, setIsOpen, children}: {
             isOpen={isOpen}
             onRequestClose={() => setIsOpen(false)}
             className={modalClasses}
-            style={{content: {transform: "translateX(calc(-50% - 16px))", maxWidth: "calc(100% - 32px)", width: 700}, overlay: {zIndex: 50}}}
+            style={{content: {transform: "translateX(calc(-50% - 16px))", maxWidth: maxWidth || "calc(100% - 32px)", width: 700}, overlay: {zIndex: 50}}}
         >
             {children}
         </ReactModal>

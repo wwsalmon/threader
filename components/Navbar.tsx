@@ -7,7 +7,7 @@ export default function Navbar() {
     const {data: session} = useSession();
     const router = useRouter();
 
-    return (
+    return router.route === "/app" ? <></> : (
         <div className="w-full sticky top-0">
             <Container className="flex items-center my-4" width="full">
                 <p>YourApp</p>
