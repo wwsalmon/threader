@@ -1,4 +1,4 @@
-import {DatedObj, UserObj} from "./types";
+import {DatedObj, UserObj} from "../models/models";
 import {NextApiHandler, NextApiRequest, NextApiResponse} from "next";
 import {getSession} from "next-auth/react";
 import dbConnect from "./dbConnect";
