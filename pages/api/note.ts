@@ -9,7 +9,7 @@ const handler: NextApiHandler = nextApiEndpoint({
 
         if (!threadId) return res400(res);
 
-        const notes = await NoteModel.find({threadId: threadId.toString()});
+        const notes = await NoteModel.find({threadId: threadId.toString()}).sort({createdAt: -1});
 
         return res200(res, {notes});
     },
@@ -35,11 +35,11 @@ const handler: NextApiHandler = nextApiEndpoint({
         return res200(res);
     },
     deleteFunction: async (req, res, session, thisUser) => {
-        const {id} = req.query;
+        const {id} = req.body;
 
         const thisNote = await NoteModel.findOne({_id: id, userId: thisUser._id});
 
-        if (!thisNote) return res500("No note with this ID exists");
+        if (!thisNote) return res500(res, "No note with this ID exists");
 
         await NoteModel.deleteOne({_id: id});
 

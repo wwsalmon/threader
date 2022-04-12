@@ -2,12 +2,16 @@ import {GetServerSideProps} from "next";
 import getThisUser from "../utils/getThisUser";
 import {ssrRedirect} from "next-response-helpers";
 import cleanForJSON from "../utils/cleanForJSON";
-import {DatedObj, ThreadObj, UserObj} from "../models/models";
+import {DatedObj, NoteObj, ThreadObj, UserObj} from "../models/models";
 import Button from "../components/headless/Button";
 import {Dispatch, SetStateAction, useEffect, useState} from "react";
 import axios from "axios";
 import classNames from "classnames";
 import Modal from "../components/headless/Modal";
+import useSWR from "swr";
+import fetcher from "../utils/fetcher";
+import {format} from "date-fns";
+import Note from "../components/Note";
 
 function NewThread({setThreads}: {setThreads: Dispatch<SetStateAction<DatedObj<ThreadObj>[]>>}) {
     const [name, setName] = useState<string>("");
@@ -53,17 +57,42 @@ function NewThread({setThreads}: {setThreads: Dispatch<SetStateAction<DatedObj<T
 export default function App({thisUser}: {thisUser: DatedObj<UserObj>}) {
     const [threads, setThreads] = useState<DatedObj<ThreadObj>[]>([]);
     const [selectedThread, setSelectedThread] = useState<DatedObj<ThreadObj> | null>(threads.length ? threads[0] : null);
+    const [notes, setNotes] = useState<DatedObj<NoteObj>[]>([]);
+    const [notesIter, setNotesIter] = useState<number>(0);
+    const [isNotesLoading, setIsNotesLoading] = useState<boolean>(false);
+
+    const {data} = useSWR<{ notes: DatedObj<NoteObj>[] }>(`/api/note?threadId=${selectedThread ? selectedThread._id : null}&iter=${notesIter}`, threads.length ? fetcher : () => ({notes: []}));
+
+    useEffect(() => {
+        if (data && data.notes) {
+            setNotes(data.notes);
+        }
+    }, [data]);
+
+    console.log(notes);
 
     useEffect(() => {
         axios.get("/api/thread").then(res => setThreads(res.data.threads)).catch(e => console.log(e));
     }, []);
+
+    function onNewNote() {
+        if (!selectedThread) return;
+        setIsNotesLoading(true);
+        axios.post("/api/note", {threadId: selectedThread._id}).then(() => {
+            setNotesIter(notesIter + 1);
+        }).catch(e => console.log(e)).finally(() => setIsNotesLoading(false));
+    }
 
     return (
         <>
             <div className="max-w-4xl flex relative mx-auto">
                 <div className="flex-shrink-0 w-60 bg-brand-700 sticky top-0 left-0 h-screen text-white flex flex-col">
                     <div className="h-16 flex items-center px-4">
-                        <img src={thisUser.image} alt={`Profile picture of ${thisUser.name}`} className="h-10 w-10 rounded-full"/>
+                        <img
+                            src={thisUser.image}
+                            alt={`Profile picture of ${thisUser.name}`}
+                            className="h-10 w-10 rounded-full"
+                        />
                         <div className="ml-4 overflow-x-hidden">
                             <p>{thisUser.name}</p>
                             <p className="text-xs truncate opacity-50">/@{thisUser.username}</p>
@@ -90,7 +119,18 @@ export default function App({thisUser}: {thisUser: DatedObj<UserObj>}) {
                                     <p>{selectedThread.name}</p>
                                     <p className="text-xs underline">{selectedThread.urlName}</p>
                                 </div>
-                                <Button className="ml-auto h-8 px-2 bg-brand-300 hover:bg-brand-400 font-bold text-xs text-white">New note</Button>
+                                <Button
+                                    className="ml-auto h-8 px-2 bg-brand-300 hover:bg-brand-400 font-bold text-xs text-white"
+                                    onClick={onNewNote}
+                                    isLoading={isNotesLoading}
+                                >
+                                    New note
+                                </Button>
+                            </div>
+                            <div>
+                                {notes.map(note => (
+                                    <Note note={note} notesIter={notesIter} setNotesIter={setNotesIter} key={note._id}/>
+                                ))}
                             </div>
                         </>
                     )}

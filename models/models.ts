@@ -48,7 +48,7 @@ const ThreadSchema = new mongoose.Schema({
 });
 
 const NoteSchema = new mongoose.Schema({
-    body: { required: true, type: String },
+    body: { required: false, type: String },
     userId: { required: true, type: mongoose.Types.ObjectId },
     threadId: { required: true, type: mongoose.Types.ObjectId },
 }, {
