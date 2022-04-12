@@ -20,6 +20,7 @@
     "nprogress": "^0.2.0",
     "prismjs": "^1.27.0",
     "react": "^18.0.0",
+    "react-autosave": "^0.3.1",
     "react-dom": "^18.0.0",
     "react-icons": "^4.3.1",
     "react-loading-skeleton": "^3.0.3",

@@ -111,10 +111,10 @@ export default function App({thisUser}: {thisUser: DatedObj<UserObj>}) {
                     </div>
                     <NewThread setThreads={setThreads}/>
                 </div>
-                <div className="w-full">
+                <div className="w-full min-h-screen border-r">
                     {selectedThread && (
                         <>
-                            <div className="h-16 flex items-center px-4 bg-white sticky top-0 left-0 w-full">
+                            <div className="h-16 flex items-center px-4 bg-brand-50 sticky top-0 left-0 w-full border-b">
                                 <div>
                                     <p>{selectedThread.name}</p>
                                     <p className="text-xs underline">{selectedThread.urlName}</p>
