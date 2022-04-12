@@ -52,7 +52,7 @@ function NewThread({setThreads}: {setThreads: Dispatch<SetStateAction<DatedObj<T
 
 export default function App({thisUser}: {thisUser: DatedObj<UserObj>}) {
     const [threads, setThreads] = useState<DatedObj<ThreadObj>[]>([]);
-    const [selectedThreadId, setSelectedThreadId] = useState<string>(threads.length && threads[0]._id);
+    const [selectedThread, setSelectedThread] = useState<DatedObj<ThreadObj> | null>(threads.length ? threads[0] : null);
 
     useEffect(() => {
         axios.get("/api/thread").then(res => setThreads(res.data.threads)).catch(e => console.log(e));
@@ -73,14 +73,27 @@ export default function App({thisUser}: {thisUser: DatedObj<UserObj>}) {
                         {threads.map(thread => (
                             <Button
                                 key={thread._id}
-                                onClick={() => setSelectedThreadId(thread._id)}
-                                className={classNames("h-9 w-full px-4 text-xs", thread._id === selectedThreadId && "bg-brand-500 font-bold")}
+                                onClick={() => setSelectedThread(thread)}
+                                className={classNames("h-9 w-full px-4 text-xs", selectedThread && thread._id === selectedThread._id && "bg-brand-500 font-bold")}
                             >
                                 {thread.name}
                             </Button>
                         ))}
                     </div>
                     <NewThread setThreads={setThreads}/>
+                </div>
+                <div className="w-full">
+                    {selectedThread && (
+                        <>
+                            <div className="h-16 flex items-center px-4 bg-white sticky top-0 left-0 w-full">
+                                <div>
+                                    <p>{selectedThread.name}</p>
+                                    <p className="text-xs underline">{selectedThread.urlName}</p>
+                                </div>
+                                <Button className="ml-auto h-8 px-2 bg-brand-300 hover:bg-brand-400 font-bold text-xs text-white">New note</Button>
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
         </>
