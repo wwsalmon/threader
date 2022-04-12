@@ -124,13 +124,15 @@ export default function App({thisUser}: {thisUser: DatedObj<UserObj>}) {
                                     onClick={onNewNote}
                                     isLoading={isNotesLoading}
                                 >
-                                    New note
+                                    new note
                                 </Button>
                             </div>
                             <div>
-                                {notes.map(note => (
+                                {notes.length ? notes.map(note => (
                                     <Note note={note} notesIter={notesIter} setNotesIter={setNotesIter} key={note._id}/>
-                                ))}
+                                )) : (
+                                    <p className="text-center mt-8 text-gray-500">no notes here yet. click "new note" to add one</p>
+                                )}
                             </div>
                         </>
                     )}
