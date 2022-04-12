@@ -1,7 +1,7 @@
-import {useCallback, useMemo, useState} from "react";
+import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from "react";
 import {withHistory} from "slate-history";
 import {Editable, ReactEditor, Slate, useFocused, useSelected, withReact} from "slate-react";
-import {createEditor, Descendant, Text} from "slate";
+import {createEditor, Descendant, Node, Text} from "slate";
 import Prism from "prismjs";
 import "../../utils/prismMarkdown";
 import classNames from "classnames";
@@ -50,10 +50,9 @@ const Leaf = ({attributes, children, leaf}) => {
     );
 };
 
-export default function Editor({}: {}) {
+export default function Editor({mdValue, setMdValue}: {mdValue: string, setMdValue: Dispatch<SetStateAction<string>>}) {
     const editor = useMemo(() => withHistory(withReact(createEditor() as ReactEditor)), []);
     const renderLeaf = useCallback(props => <Leaf {...props} />, []);
-    const [value, setValue] = useState<Descendant[]>([{type: "p", children: [{text: ""}]}]);
 
     const decorate = useCallback(([node, path]) => {
         const ranges = [];
@@ -95,7 +94,12 @@ export default function Editor({}: {}) {
     }, []);
 
     return (
-        <Slate editor={editor} value={value} onChange={d => setValue(d)}>
+        <Slate
+            editor={editor}
+            value={mdValue.split("\n").map(d => ({type: "p", children: [{text: d}]}))}
+            // @ts-ignore -- for more permanent fix better define CustomElement
+            onChange={d => setMdValue(d.map(x => x.children[0].text).join("\n"))}
+        >
             <Editable
                 placeholder="Write some markdown"
                 decorate={decorate}
