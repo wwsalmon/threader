@@ -9,6 +9,10 @@ body {
     font-family: "Manrope", sans-serif;
 }
 
+.font-spectral {
+    font-family: "Spectral", serif;
+}
+
 .up-spinner {
     position: absolute;
     top: calc(50% - 0.5rem);

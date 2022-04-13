@@ -2,29 +2,27 @@ import {NextSeo} from "next-seo";
 import {useRouter} from "next/router";
 
 export default function SEO({
-                                  title = "NextJS starter: save hours of boilerplate setup",
-                                  description = "next-mongodb-nextauth-example allows you to skip hours of boilerplate setup with a single command when developing your app.",
+                                  title = "Threader: Take notes in threads",
+                                  description = "Threader is a notetaking app that lets you take notes in threads, like a private Twitter or Slack.",
                                   imgUrl = null,
-                                  authorUsername = null,
-                                  publishedDate = null,
                                   noindex = false,
                               }: { title?: string, description?: string, imgUrl?: string, authorUsername?: string, publishedDate?: string, noindex?: boolean }) {
     const router = useRouter();
-    const fullTitle = title + (router.asPath === "/" ? "" : " | YourApp");
+    const fullTitle = title + (router.asPath === "/" ? "" : " | Threader");
 
     let openGraph = {
         title: fullTitle,
         description: description,
-        url: "https://your-domain.com" + router.asPath,
+        url: "https://threader.vercel.app" + router.asPath,
         images: imgUrl ? [
             { url: imgUrl }
         ] : [
-            { url: "https://your-domain.com/defaultImage.png" }
+            { url: "https://threader.vercel.app/logo.png" }
         ],
     };
 
     let twitter = {
-        site: "@your-at",
+        site: "@wwsalmon",
         cardType: imgUrl ? "summary_large_image" : "summary",
     };
 

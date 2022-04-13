@@ -12,6 +12,7 @@ import useSWR from "swr";
 import fetcher from "../utils/fetcher";
 import {format} from "date-fns";
 import Note from "../components/Note";
+import SEO from "../components/SEO";
 
 function NewThread({setThreads}: {setThreads: Dispatch<SetStateAction<DatedObj<ThreadObj>[]>>}) {
     const [name, setName] = useState<string>("");
@@ -85,6 +86,7 @@ export default function App({thisUser}: {thisUser: DatedObj<UserObj>}) {
 
     return (
         <>
+            <SEO title="Your threads"/>
             <div className="max-w-4xl flex relative mx-auto">
                 <div className="flex-shrink-0 w-60 bg-brand-700 sticky top-0 left-0 h-screen text-white flex flex-col">
                     <div className="h-16 flex items-center px-4">

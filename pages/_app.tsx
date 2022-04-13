@@ -17,7 +17,7 @@ Router.events.on("routeChangeError", () => NProgress.done());
 export default function App({Component, pageProps}) {
     return (
         <SessionProvider session={pageProps.session}>
-            <Navbar/>
+            {/*<Navbar/>*/}
             <div id="app-root">
                 <Component {...pageProps} />
             </div>
