@@ -70,6 +70,9 @@ export default function App({thisUser}: {thisUser: DatedObj<UserObj>}) {
     useEffect(() => {
         if (threadsData && threadsData.threads) {
             setThreads(threadsData.threads);
+            if (threadsData.threads.length) {
+                setSelectedThread(threadsData.threads[0]);
+            }
         }
     }, [threadsData]);
 
@@ -105,13 +108,13 @@ export default function App({thisUser}: {thisUser: DatedObj<UserObj>}) {
                                     setNotes([]);
                                     setSelectedThread(thread)
                                 }}
-                                disabled={selectedThread._id === thread._id}
+                                disabled={selectedThread && (selectedThread._id === thread._id)}
                                 className={classNames("h-9 w-full px-4 text-xs text-left outline-none", selectedThread && thread._id === selectedThread._id && "bg-brand-500 font-bold")}
                             >
                                 {thread.name}
                             </button>
                         )) : (
-                            <p>no threads here yet. click "new thread" to add one</p>
+                            <p className="px-4 opacity-50 text-sm mt-4">no threads here yet. click "new thread" to add one</p>
                         ) : (
                             <div className="px-4">
                                 <Skeleton height={24} count={3} className="opacity-25 mb-1"/>
