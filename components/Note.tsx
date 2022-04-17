@@ -60,7 +60,7 @@ export default function Note({note, notesIter, setNotesIter}: {note: DatedObj<No
                     </Button>
                 </Modal>
             </div>
-            <div className="my-2 text-xl leading-relaxed font-spectral">
+            <div className="my-2 text-xl leading-relaxed">
                 <Editor mdValue={value} setMdValue={setValue}/>
             </div>
         </div>

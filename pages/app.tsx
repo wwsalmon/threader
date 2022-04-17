@@ -10,11 +10,12 @@ import classNames from "classnames";
 import Modal from "../components/headless/Modal";
 import useSWR from "swr";
 import fetcher from "../utils/fetcher";
-import {format} from "date-fns";
 import Note from "../components/Note";
 import SEO from "../components/SEO";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
-function NewThread({setThreads}: {setThreads: Dispatch<SetStateAction<DatedObj<ThreadObj>[]>>}) {
+function NewThread({threadsIter, setThreadsIter}: {threadsIter: number, setThreadsIter: Dispatch<SetStateAction<number>>}) {
     const [name, setName] = useState<string>("");
     const [urlName, setUrlName] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -22,13 +23,7 @@ function NewThread({setThreads}: {setThreads: Dispatch<SetStateAction<DatedObj<T
 
     function onCreate() {
         setIsLoading(true);
-        axios.post("/api/thread", {name, urlName}).then(() => {
-            axios.get("/api/thread").then(res => setThreads(res.data.threads)).catch(e => console.log(e));
-            setIsLoading(false);
-            setName("");
-            setUrlName("");
-            setIsModalOpen(false);
-        }).catch(e => console.log(e)).finally(() => setIsLoading(false));
+        axios.post("/api/thread", {name, urlName}).then(() => setThreadsIter(threadsIter + 1)).catch(e => console.log(e)).finally(() => setIsLoading(false));
     }
 
     return (
@@ -57,12 +52,14 @@ function NewThread({setThreads}: {setThreads: Dispatch<SetStateAction<DatedObj<T
 
 export default function App({thisUser}: {thisUser: DatedObj<UserObj>}) {
     const [threads, setThreads] = useState<DatedObj<ThreadObj>[]>([]);
+    const [threadsIter, setThreadsIter] = useState<number>(null);
     const [selectedThread, setSelectedThread] = useState<DatedObj<ThreadObj> | null>(threads.length ? threads[0] : null);
     const [notes, setNotes] = useState<DatedObj<NoteObj>[]>([]);
     const [notesIter, setNotesIter] = useState<number>(0);
     const [isNotesLoading, setIsNotesLoading] = useState<boolean>(false);
 
     const {data} = useSWR<{ notes: DatedObj<NoteObj>[] }>(`/api/note?threadId=${selectedThread ? selectedThread._id : null}&iter=${notesIter}`, threads.length ? fetcher : () => ({notes: []}));
+    const {data: threadsData} = useSWR<{threads: DatedObj<ThreadObj>[]}>(`/api/thread?iter=${threadsIter}`, fetcher);
 
     useEffect(() => {
         if (data && data.notes) {
@@ -70,11 +67,11 @@ export default function App({thisUser}: {thisUser: DatedObj<UserObj>}) {
         }
     }, [data]);
 
-    console.log(notes);
-
     useEffect(() => {
-        axios.get("/api/thread").then(res => setThreads(res.data.threads)).catch(e => console.log(e));
-    }, []);
+        if (threadsData && threadsData.threads) {
+            setThreads(threadsData.threads);
+        }
+    }, [threadsData]);
 
     function onNewNote() {
         if (!selectedThread) return;
@@ -101,7 +98,7 @@ export default function App({thisUser}: {thisUser: DatedObj<UserObj>}) {
                         </div>
                     </div>
                     <div className="flex-grow-1">
-                        {threads.map(thread => (
+                        {threadsData ? threads.length ? threads.map(thread => (
                             <Button
                                 key={thread._id}
                                 onClick={() => setSelectedThread(thread)}
@@ -109,9 +106,15 @@ export default function App({thisUser}: {thisUser: DatedObj<UserObj>}) {
                             >
                                 {thread.name}
                             </Button>
-                        ))}
+                        )) : (
+                            <p>no threads here yet. click "new thread" to add one</p>
+                        ) : (
+                            <div className="px-4">
+                                <Skeleton height={24} count={3} className="opacity-25 mb-1"/>
+                            </div>
+                        )}
                     </div>
-                    <NewThread setThreads={setThreads}/>
+                    <NewThread threadsIter={threadsIter} setThreadsIter={setThreadsIter}/>
                 </div>
                 <div className="w-full min-h-screen border-r">
                     {selectedThread && (
@@ -130,10 +133,15 @@ export default function App({thisUser}: {thisUser: DatedObj<UserObj>}) {
                                 </Button>
                             </div>
                             <div>
-                                {notes.length ? notes.map(note => (
+                                {(data || notes.length) ? notes.length ? notes.map(note => (
                                     <Note note={note} notesIter={notesIter} setNotesIter={setNotesIter} key={note._id}/>
                                 )) : (
-                                    <p className="text-center mt-8 text-gray-500">no notes here yet. click "new note" to add one</p>
+                                    <p className="text-center mt-8 text-gray-500">no notes here yet. click "new note" to
+                                        add one</p>
+                                ) : (
+                                    <div className="px-4">
+                                        <Skeleton height={120} count={3} className="mt-4"/>
+                                    </div>
                                 )}
                             </div>
                         </>
