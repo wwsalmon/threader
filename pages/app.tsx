@@ -99,13 +99,17 @@ export default function App({thisUser}: {thisUser: DatedObj<UserObj>}) {
                     </div>
                     <div className="flex-grow-1">
                         {threadsData ? threads.length ? threads.map(thread => (
-                            <Button
+                            <button
                                 key={thread._id}
-                                onClick={() => setSelectedThread(thread)}
-                                className={classNames("h-9 w-full px-4 text-xs", selectedThread && thread._id === selectedThread._id && "bg-brand-500 font-bold")}
+                                onClick={() => {
+                                    setNotes([]);
+                                    setSelectedThread(thread)
+                                }}
+                                disabled={selectedThread._id === thread._id}
+                                className={classNames("h-9 w-full px-4 text-xs text-left outline-none", selectedThread && thread._id === selectedThread._id && "bg-brand-500 font-bold")}
                             >
                                 {thread.name}
-                            </Button>
+                            </button>
                         )) : (
                             <p>no threads here yet. click "new thread" to add one</p>
                         ) : (
