@@ -15,7 +15,7 @@ export default function Home({thisUser}: {thisUser: DatedObj<UserObj>}) {
                 <p className="ml-3 font-bold text-brand-300 text-xl">Threader</p>
             </div>
             <h1 className="text-4xl font-bold mt-8 mb-4">Take notes in threads</h1>
-            <p className="text-xl font-font">Thoughts happen over time. Your notes should too.</p>
+            <p className="text-xl font-font">Thinking happens over time. Your notes should too.</p>
             {thisUser ? (
                 <Button className="bg-brand-300 hover:bg-brand-400 p-2 rounded-md text-white my-8" href="/app">
                     Go to app
