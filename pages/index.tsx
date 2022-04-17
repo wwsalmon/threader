@@ -14,9 +14,8 @@ export default function Home({thisUser}: {thisUser: DatedObj<UserObj>}) {
                 <img src="/logo.png" alt="Threader logo" className="h-6"/>
                 <p className="ml-3 font-bold text-brand-300 text-xl">Threader</p>
             </div>
-            <h1 className="text-4xl font-bold my-8">Take notes in threads</h1>
-            <p className="my-8">Like a private Twitter or Slack. Full markdown support</p>
-            <p className="my-8">A side project by <a className="underline" href="https://twitter.com/wwsalmon">Samson Zhang</a></p>
+            <h1 className="text-4xl font-bold mt-8 mb-4">Take notes in threads</h1>
+            <p className="text-xl font-font">Thoughts happen over time. Your notes should too.</p>
             {thisUser ? (
                 <Button className="bg-brand-300 hover:bg-brand-400 p-2 rounded-md text-white my-8" href="/app">
                     Go to app
@@ -25,6 +24,7 @@ export default function Home({thisUser}: {thisUser: DatedObj<UserObj>}) {
                 <SignInButton className="bg-brand-300 hover:bg-brand-400 text-white p-2 rounded-md my-4"/>
             )}
             <img src="/hero.png" alt="Screenshot of Threader" className="my-8 shadow-xl rounded-md"/>
+            <p className="my-8">A side project by <a className="underline" href="https://twitter.com/wwsalmon">Samson Zhang</a></p>
         </div>
     );
 }
