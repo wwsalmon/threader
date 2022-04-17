@@ -1,14 +1,16 @@
 import {GetServerSideProps} from "next";
 import getThisUser from "../../utils/getThisUser";
 import {ssrRedirect} from "next-response-helpers";
-import SignInButton from "../../components/SignInButton";
-import {getSession} from "next-auth/react";
+import {getSession, signIn} from "next-auth/react";
+import {useEffect} from "react";
 
-export default function SignIn({}: {}) {
+export default function SignOut({}: {}) {
+    useEffect(() => {
+        signIn("google")
+    })
+
     return (
-        <>
-            <SignInButton/>
-        </>
+        <></>
     );
 }
 
