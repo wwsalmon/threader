@@ -14,6 +14,7 @@ import Note from "../components/Note";
 import SEO from "../components/SEO";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import {FiMenu} from "react-icons/fi";
 
 function NewThread({threadsIter, setThreadsIter}: {threadsIter: number, setThreadsIter: Dispatch<SetStateAction<number>>}) {
     const [name, setName] = useState<string>("");
@@ -57,6 +58,7 @@ export default function App({thisUser}: {thisUser: DatedObj<UserObj>}) {
     const [notes, setNotes] = useState<DatedObj<NoteObj>[]>([]);
     const [notesIter, setNotesIter] = useState<number>(0);
     const [isNotesLoading, setIsNotesLoading] = useState<boolean>(false);
+    const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
     const {data} = useSWR<{ notes: DatedObj<NoteObj>[] }>(`/api/note?threadId=${selectedThread ? selectedThread._id : null}&iter=${notesIter}`, threads.length ? fetcher : () => ({notes: []}));
     const {data: threadsData} = useSWR<{threads: DatedObj<ThreadObj>[]}>(`/api/thread?iter=${threadsIter}`, fetcher);
@@ -88,8 +90,16 @@ export default function App({thisUser}: {thisUser: DatedObj<UserObj>}) {
         <>
             <SEO title="Your threads"/>
             <div className="max-w-4xl flex relative mx-auto">
-                <div className="flex-shrink-0 w-60 bg-brand-700 sticky top-0 left-0 h-screen text-white flex flex-col">
+                <div className={
+                    classNames(
+                        "flex-shrink-0 w-60 bg-brand-700 fixed sm:sticky h-full top-0 h-screen text-white flex flex-col z-20 transition-all",
+                        isMenuOpen ? "left-0" : "-left-60",
+                    )
+                }>
                     <div className="h-16 flex items-center px-4">
+                        <Button className="mr-4" onClick={() => setIsMenuOpen(false)}>
+                            <FiMenu/>
+                        </Button>
                         <img
                             src={thisUser.image}
                             alt={`Profile picture of ${thisUser.name}`}
@@ -106,7 +116,8 @@ export default function App({thisUser}: {thisUser: DatedObj<UserObj>}) {
                                 key={thread._id}
                                 onClick={() => {
                                     setNotes([]);
-                                    setSelectedThread(thread)
+                                    setSelectedThread(thread);
+                                    setIsMenuOpen(false);
                                 }}
                                 disabled={selectedThread && (selectedThread._id === thread._id)}
                                 className={classNames("h-9 w-full px-4 text-xs text-left outline-none", selectedThread && thread._id === selectedThread._id && "bg-brand-500 font-bold")}
@@ -126,7 +137,10 @@ export default function App({thisUser}: {thisUser: DatedObj<UserObj>}) {
                 <div className="w-full min-h-screen border-r">
                     {selectedThread && (
                         <>
-                            <div className="h-16 flex items-center px-4 bg-brand-50 sticky top-0 left-0 w-full border-b">
+                            <div className="h-16 flex items-center px-4 bg-brand-50 sticky top-0 left-0 w-full border-b z-10">
+                                <Button className="mr-4" onClick={() => setIsMenuOpen(true)}>
+                                    <FiMenu/>
+                                </Button>
                                 <div>
                                     <p>{selectedThread.name}</p>
                                     <p className="text-xs underline">{selectedThread.urlName}</p>
