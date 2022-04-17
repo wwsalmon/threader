@@ -92,7 +92,7 @@ export default function App({thisUser}: {thisUser: DatedObj<UserObj>}) {
             <div className="max-w-4xl flex relative mx-auto">
                 <div className={
                     classNames(
-                        "flex-shrink-0 w-60 bg-brand-700 fixed sm:sticky h-full top-0 h-screen text-white flex flex-col z-20 transition-all",
+                        "flex-shrink-0 w-60 bg-brand-700 fixed sm:sticky h-screen top-0 h-screen text-white flex flex-col z-20 transition-all",
                         isMenuOpen ? "left-0" : "-left-60",
                     )
                 }>
