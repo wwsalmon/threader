@@ -97,7 +97,7 @@ export default function App({thisUser}: {thisUser: DatedObj<UserObj>}) {
                     )
                 }>
                     <div className="h-16 flex items-center px-4">
-                        <Button className="mr-4" onClick={() => setIsMenuOpen(false)}>
+                        <Button className="mr-4 sm:hidden" onClick={() => setIsMenuOpen(false)}>
                             <FiMenu/>
                         </Button>
                         <img
@@ -112,7 +112,7 @@ export default function App({thisUser}: {thisUser: DatedObj<UserObj>}) {
                     </div>
                     <div className="flex-grow-1">
                         {threadsData ? threads.length ? threads.map(thread => (
-                            <button
+                            <Button
                                 key={thread._id}
                                 onClick={() => {
                                     setNotes([]);
@@ -123,7 +123,7 @@ export default function App({thisUser}: {thisUser: DatedObj<UserObj>}) {
                                 className={classNames("h-9 w-full px-4 text-xs text-left outline-none", selectedThread && thread._id === selectedThread._id && "bg-brand-500 font-bold")}
                             >
                                 {thread.name}
-                            </button>
+                            </Button>
                         )) : (
                             <p className="px-4 opacity-50 text-sm mt-4">no threads here yet. click "new thread" to add one</p>
                         ) : (
@@ -138,7 +138,7 @@ export default function App({thisUser}: {thisUser: DatedObj<UserObj>}) {
                     {selectedThread && (
                         <>
                             <div className="h-16 flex items-center px-4 bg-brand-50 sticky top-0 left-0 w-full border-b z-10">
-                                <Button className="mr-4" onClick={() => setIsMenuOpen(true)}>
+                                <Button className="mr-4 sm:hidden" onClick={() => setIsMenuOpen(true)}>
                                     <FiMenu/>
                                 </Button>
                                 <div>
