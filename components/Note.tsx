@@ -21,7 +21,7 @@ export default function Note({note, notesIter, setNotesIter}: {note: DatedObj<No
 
                 axios
                     .post("/api/note", {noteId: note._id, body: value})
-                    .then(() => setNotesIter(notesIter + 1))
+                    .then(() => setNotesIter(prev => prev + 1))
                     .catch(e => console.log(e))
                     .finally(() => setIsLoading(false));
             }
@@ -33,7 +33,7 @@ export default function Note({note, notesIter, setNotesIter}: {note: DatedObj<No
 
         axios
             .delete("/api/note", {data: {id: note._id}})
-            .then(() => setNotesIter(notesIter + 1))
+            .then(() => setNotesIter(prev => prev + 1))
             .catch(e => console.log(e))
             .finally(() => setIsDeleteLoading(false));
     }
