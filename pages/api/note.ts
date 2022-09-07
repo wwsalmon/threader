@@ -21,7 +21,7 @@ const handler: NextApiHandler = nextApiEndpoint({
         if (noteId) {
             const thisNote = await NoteModel.findById(noteId.toString());
 
-            if (!thisNote) return res500(res, "note with this ID not found");
+            if (!thisNote) return res500(res, new Error("note with this ID not found"));
 
             if (thisNote.userId.toString() !== thisUser._id.toString()) return res403(res);
 
@@ -39,7 +39,7 @@ const handler: NextApiHandler = nextApiEndpoint({
 
         const thisNote = await NoteModel.findOne({_id: id, userId: thisUser._id});
 
-        if (!thisNote) return res500(res, "No note with this ID exists");
+        if (!thisNote) return res500(res, new Error("No note with this ID exists"));
 
         await NoteModel.deleteOne({_id: id});
 
